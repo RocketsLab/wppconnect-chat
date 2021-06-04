@@ -65,4 +65,15 @@ class Chat extends Component
             ])->asJson()->post();
         }
     }
+
+    public function getImage($messageId)
+    {
+        $response = Wppconnect::make($this->url)->to("/api/{$this->session}/get-media-by-message/{$messageId}")->withHeaders([
+            'Authorization' => "Bearer {$this->token}"
+        ])->asJson()->get();
+
+        $message = json_decode($response->getBody()->getContents(), true);
+
+        return $message;
+    }
 }
