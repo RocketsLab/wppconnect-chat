@@ -45,6 +45,6 @@ class ChatMessage extends Component
 
     public function chatChanged($chat)
     {
-        $this->currentChat = $chat['id'];
+        $this->currentChat = $chat['id']['_serialized'];
     }
 }

@@ -25,6 +25,7 @@ class Chats extends Component
 
     public function mount($chats)
     {
+//        dd($chats);
         $this->chats = $chats;
         $this->url = config('wppconnect.defaults.base_uri');
         $this->session = "NERDWHATS_AMERICA";
@@ -46,7 +47,7 @@ class Chats extends Component
         $this->currentChat = $chatId;
 
         $this->chats = $this->chats->map(function ($chat) use ($chatId) {
-            if ($chat['id'] == $chatId) {
+            if ($chat['id']['_serialized'] == $chatId) {
                 $this->sendSeen();
                 $this->emit('chat-changed', $chat);
                 $chat['unreadCount'] = 0;
@@ -59,13 +60,14 @@ class Chats extends Component
     public function newMessage($response)
     {
         $message = $response['response'];
+
         $this->chats = $this->chats->map(function ($chat) use ($message) {
-            if (($message['chatId'] == $chat['id']) && ($chat['id'] != $this->currentChat)) {
+            if (($message['chatId'] == $chat['id']['_serialized']) && ($chat['id']['_serialized'] != $this->currentChat)) {
                 $chat['unreadCount']++;
             }
-            if ($message['chatId'] == $chat['id']) {
-                array_push($chat['msgs'], $message);
-            }
+//            if ($message['chatId'] == $chat['id']['_serialized']) {
+//                array_push($chat['msgs'], $message);
+//            }
             return $chat;
         });
     }

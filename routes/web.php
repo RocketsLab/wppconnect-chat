@@ -18,7 +18,7 @@ Route::get('/', function (\WPPConnectTeam\Wppconnect\Wppconnect $wpp) {
     $session = "NERDWHATS_AMERICA";
     $token = env('WPP_TOKEN');
 
-    $response =  $wpp->make($url)->to("/api/{$session}/all-chats-with-messages")->withHeaders([
+    $response =  $wpp->make($url)->to("/api/{$session}/all-chats")->withHeaders([
         'Authorization' => "Bearer {$token}"
     ])->asJson()->get();
 
@@ -29,6 +29,20 @@ Route::get('/', function (\WPPConnectTeam\Wppconnect\Wppconnect $wpp) {
 });
 
 Route::get('wpp', function (\WPPConnectTeam\Wppconnect\Wppconnect $wpp) {
+
+    $url = config('wppconnect.defaults.base_uri');
+    $session = "NERDWHATS_AMERICA";
+    $token = env('WPP_TOKEN');
+
+    $response =  $wpp->make($url)->to("/api/{$session}/all-chats-with-messages")->withHeaders([
+        'Authorization' => "Bearer {$token}"
+    ])->asJson()->get();
+
+    return collect(json_decode($response->getBody()->getContents(), true)['response']);
+
+});
+
+Route::get('chat', function (\WPPConnectTeam\Wppconnect\Wppconnect $wpp) {
 
     $url = config('wppconnect.defaults.base_uri');
     $session = "NERDWHATS_AMERICA";

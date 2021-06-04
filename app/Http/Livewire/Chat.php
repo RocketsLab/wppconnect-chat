@@ -25,7 +25,7 @@ class Chat extends Component
 
     public function fromMe($message)
     {
-        return (isset($message['id']['fromMe']) && $message['id']['fromMe']) || (isset($message['fromMe']) && $message['fromMe']);
+        return isset($message['fromMe']);
     }
 
     public function mount()
@@ -43,6 +43,7 @@ class Chat extends Component
     public function newMessage($response)
     {
         $message = $response['response'];
+
         if($message['chatId'] == $this->currentChat) {
             $this->messages[] = $message;
             $this->sendSeen();
@@ -51,8 +52,14 @@ class Chat extends Component
 
     public function chatChanged($chat)
     {
-        $this->currentChat = $chat['id'];
-        $this->messages = $chat['msgs'];
+        $this->currentChat = $chat['id']['_serialized'];
+
+        $phone = Str::replace("@c.us", "", $this->currentChat);
+        $response =  Wppconnect::make($this->url)->to("/api/{$this->session}/chat-by-id/{$phone}")->withHeaders([
+            'Authorization' => "Bearer {$this->token}"
+        ])->asJson()->get();
+
+        $this->messages = json_decode($response->getBody()->getContents(), true)['response'];
     }
 
     protected function sendSeen()

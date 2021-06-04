@@ -3,14 +3,14 @@
         @foreach($messages as $message)
             @if(in_array($message['type'], ['chat', 'image']))
                 <div class="w-full py-4 px-8">
-                    @if($this->fromMe($message))
+                    @if($message['fromMe'])
                         <div class="flex justify-end">
                             <div class="bg-indigo-100 sm:text-right w-7/12 sm:rounded-lg py-3 px-4">
                                 @if($message['type'] == 'chat')
                                     <p>{{ $message['body'] }}</p>
                                     <p class="text-gray-700">{{ \Illuminate\Support\Carbon::parse($message['t'])->subHours(3)->format("H:i") }}</p>
                                 @else
-                                    <img class="w-48" src="data:image/png;base64,{{ $this->getImage($message['id']['_serialized']) }}" alt="" />
+                                    <img class="w-48" src="data:image/png;base64,{{ $this->getImage($message['id']) }}" alt="" />
                                     <p class="text-gray-700">{{ \Illuminate\Support\Carbon::parse($message['t'])->subHours(3)->format("H:i") }}</p>
                                 @endif
                             </div>
@@ -21,7 +21,7 @@
                                 <p>{{ $message['body'] }}</p>
                                 <p class="text-gray-700">{{ \Illuminate\Support\Carbon::parse($message['t'])->subHours(3)->format("H:i") }}</p>
                             @else
-                                <img class="w-48" src="data:image/png;base64,{{ $this->getImage($message['id']['_serialized']) }}" alt="" />
+                                <img class="w-48" src="data:image/png;base64,{{ $this->getImage($message['id']) }}" alt="" />
                                 <p class="text-gray-700">{{ \Illuminate\Support\Carbon::parse($message['t'])->subHours(3)->format("H:i") }}</p>
                             @endif
                         </div>
